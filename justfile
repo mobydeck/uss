@@ -19,13 +19,13 @@ test-coverage:
 
 # Build binary for current platform
 build:
-    go build -trimpath -ldflags="-s -w -X github.com/mobydeck/uss/cmd/uss.version={{ _get-version }}" -o uss ./cmd/uss
+    go build -trimpath -ldflags="-s -w -X main.version={{ _get-version }}" -o uss ./cmd/uss
     @echo "Built: uss (version: {{ _get-version }})"
 
 # Helper function to build a binary for a specific OS/ARCH
 _build-binary os arch:
     mkdir -p dist
-    GOOS={{ os }} GOARCH={{ arch }} go build -trimpath -ldflags="-s -w -X github.com/mobydeck/uss/cmd/uss.version={{ _get-version }}" -o dist/uss-{{ os }}-{{ arch }} ./cmd/uss
+    GOOS={{ os }} GOARCH={{ arch }} go build -trimpath -ldflags="-s -w -X main.version={{ _get-version }}" -o dist/uss-{{ os }}-{{ arch }} ./cmd/uss
     @echo "Built: dist/uss-{{ os }}-{{ arch }} (version: {{ _get-version }})"
 
 # Build for Linux AMD64
