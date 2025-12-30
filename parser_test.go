@@ -169,6 +169,37 @@ u_str LISTEN 0      128    @5cbfc 47960                                         
 	}
 }
 
+func TestParse_MissingNetidColumn(t *testing.T) {
+	// ss output without Netid column (e.g., ss -tnl)
+	input := `State                Recv-Q               Send-Q                             Local Address:Port                             Peer Address:Port
+LISTEN               0                    4096                                   127.0.0.1:2019                                  0.0.0.0:*
+LISTEN               0                    4096                                     0.0.0.0:8443                                  0.0.0.0:*`
+
+	entries, err := Parse(strings.NewReader(input), Options{Strict: false})
+	if err != nil {
+		t.Fatalf("Parse failed: %v", err)
+	}
+
+	if len(entries) != 2 {
+		t.Fatalf("Expected 2 entries, got %d", len(entries))
+	}
+
+	// Should infer tcp as netid
+	if entries[0].Netid != "tcp" {
+		t.Errorf("Expected netid=tcp, got %q", entries[0].Netid)
+	}
+	if entries[0].State != "LISTEN" {
+		t.Errorf("Expected state=LISTEN, got %q", entries[0].State)
+	}
+	if entries[0].LocalPort != "2019" {
+		t.Errorf("Expected localPort=2019, got %q", entries[0].LocalPort)
+	}
+
+	if entries[1].LocalPort != "8443" {
+		t.Errorf("Expected localPort=8443, got %q", entries[1].LocalPort)
+	}
+}
+
 func TestParse_SkipErrorLines(t *testing.T) {
 	input := `Failed to open cgroup2 by ID
 Failed to open cgroup2 by ID

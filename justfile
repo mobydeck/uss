@@ -52,10 +52,10 @@ dist: build-all
     cd dist
 
     # Create tarballs
-    tar -czf archives/uss-linux-amd64.tar.gz uss-linux-amd64 ../README.md
-    tar -czf archives/uss-linux-arm64.tar.gz uss-linux-arm64 ../README.md
-    tar -czf archives/uss-darwin-amd64.tar.gz uss-darwin-amd64 ../README.md
-    tar -czf archives/uss-darwin-arm64.tar.gz uss-darwin-arm64 ../README.md
+    tar -czf archives/uss-linux-amd64.tar.gz uss-linux-amd64 ../README.md ../LICENSE
+    tar -czf archives/uss-linux-arm64.tar.gz uss-linux-arm64 ../README.md ../LICENSE
+    tar -czf archives/uss-darwin-amd64.tar.gz uss-darwin-amd64 ../README.md ../LICENSE
+    tar -czf archives/uss-darwin-arm64.tar.gz uss-darwin-arm64 ../README.md ../LICENSE
 
     # Create checksums
     #cd archives && shasum -a 256 * > SHA256SUMS && cd ..

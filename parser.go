@@ -52,10 +52,10 @@ func Parse(r io.Reader, opt Options) ([]Entry, error) {
 	return entries, nil
 }
 
-// isHeaderLine detects the header line (starts with "Netid")
+// isHeaderLine detects the header line (starts with "Netid" or "State")
 func isHeaderLine(line string) bool {
 	trimmed := strings.TrimSpace(line)
-	return strings.HasPrefix(trimmed, "Netid")
+	return strings.HasPrefix(trimmed, "Netid") || strings.HasPrefix(trimmed, "State")
 }
 
 // shouldSkipLine detects error messages and other lines to skip
@@ -83,6 +83,16 @@ func parseLine(line string, lineNum int) (Entry, error) {
 		return Entry{}, fmt.Errorf("insufficient fields (need at least 4, got %d)", len(fields))
 	}
 
+	firstField := fields[0]
+
+	// Check if first field is Netid (tcp, udp, u_str, etc.) or State (LISTEN, UNCONN, etc.)
+	// If it's a state, the Netid column is missing (e.g., from ss -tnl without Netid in output)
+	if isStateValue(firstField) {
+		// Netid column is missing, prepend "tcp" as default and reparse
+		line = "tcp " + line
+		fields = strings.Fields(line)
+	}
+
 	netid := fields[0]
 
 	// Detect UNIX sockets by netid prefix
@@ -92,4 +102,23 @@ func parseLine(line string, lineNum int) (Entry, error) {
 
 	// Otherwise, treat as INET socket
 	return parseInetEntry(line, lineNum)
+}
+
+// isStateValue checks if a string is a socket state value
+func isStateValue(s string) bool {
+	states := map[string]bool{
+		"LISTEN":     true,
+		"UNCONN":     true,
+		"ESTAB":      true,
+		"SYN-SENT":   true,
+		"SYN-RECV":   true,
+		"FIN-WAIT1":  true,
+		"FIN-WAIT2":  true,
+		"TIME-WAIT":  true,
+		"CLOSE":      true,
+		"CLOSE-WAIT": true,
+		"LAST-ACK":   true,
+		"CLOSING":    true,
+	}
+	return states[s]
 }

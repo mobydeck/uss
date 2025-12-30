@@ -37,6 +37,26 @@ By default, `uss` reads from stdin and outputs human-readable format:
 ss -tunap | uss
 ```
 
+### Executing ss Directly
+
+Use the `--ss` flag to execute the `ss` command directly with custom flags:
+
+```bash
+# Listen on all TCP ports
+uss --ss tnl
+
+# Show all TCP and UDP sockets with process information
+uss --ss tunap
+
+# Get UNIX sockets with all details
+uss --ss peanutlx
+
+# With leading dash (also works)
+uss --ss -tnl
+```
+
+The `--ss` flag automatically parses output even when the Netid column is missing (e.g., from `ss -tnl`), inferring it as `tcp` by default. The leading dash in ss flags is optional.
+
 ### Output Formats
 
 **Human-readable (default):**
@@ -153,6 +173,21 @@ ss -peanutlx | uss -q "unixpath=docker"
 
 # Find sockets with specific cgroup
 ss -tunap | uss -q "cgroup=systemd"
+```
+
+**Using --ss flag with output formats:**
+```bash
+# Execute ss directly and output as JSON
+uss --ss tunap --json
+
+# Execute ss directly and output as YAML with filtering
+uss --ss peanutlx --yaml -q unixpath=/run/*
+
+# Execute ss and export as CSV
+uss --ss tunap --csv > all_sockets.csv
+
+# Execute ss and output as pretty JSON
+uss --ss tnl --json --pretty
 ```
 
 **Combined queries with output format:**
