@@ -1,0 +1,5 @@
+Netid State Recv-Q Send-Q Local Address:Port Peer Address:Port Process
+u_str LISTEN 0      4096   /work/.local/share/zed/server_state/workspace-97/stdout.sock 67284            * 0    users:(("zed-remote-serv",pid=2825,fd=17))  <-> ino:201032 dev:0/87 peers:
+u_str LISTEN 0      4096   /work/.local/share/zed/server_state/workspace-97/stderr.sock 67285            * 0    users:(("zed-remote-serv",pid=2825,fd=18))  <-> ino:201033 dev:0/87 peers:
+u_str LISTEN 0      4096                                    /run/systemd/journal/stdout 16498            * 0                                                <-> ino:75 dev:0/98 peers:
+u_seq LISTEN 0      4096                                              /run/udev/control 16499            * 0
